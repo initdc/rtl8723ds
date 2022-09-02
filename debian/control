@@ -1,0 +1,19 @@
+Source: licheerv-rtl8723ds-dkms
+Maintainer: Alexandre Ghiti <alexandre.ghiti@canonical.com>
+Section: utils
+Priority: optional
+Standards-Version: 4.5.1
+Build-Depends:
+ debhelper-compat (= 13),
+ dkms
+Homepage: https://github.com/lwfinger/rtl8723ds
+Vcs-Browser: https://github.com/lwfinger/rtl8723ds
+Vcs-Git: https://github.com/lwfinger/rtl8723ds
+Rules-Requires-Root: no
+
+Package: licheerv-rtl8723ds-dkms
+Architecture: riscv64
+Depends: ${shlibs:Depends},
+	${misc:Depends}
+Description: DKMS package to build Wifi driver for the LicheeRV board
+ DKMS package to automatically build rtl8723ds driver.

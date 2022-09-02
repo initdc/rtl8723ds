@@ -1,0 +1,5 @@
+licheerv-rtl8723ds-dkms (1.0-0ubuntu1) kinetic; urgency=medium
+
+  * Initial version (LP: #1989595)
+
+ -- Alexandre Ghiti <alexandre.ghiti@canonical.com>  Tue, 02 Sep 2022 11:39:52 +0100

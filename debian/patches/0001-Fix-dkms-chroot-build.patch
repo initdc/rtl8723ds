@@ -1,0 +1,28 @@
+From b0bf2ae20141874d18b7083cf84935a977d556a0 Mon Sep 17 00:00:00 2001
+From: Alexandre Ghiti <alexandre.ghiti@canonical.com>
+Date: Mon, 12 Sep 2022 13:52:58 +0200
+Subject: [PATCH] Fix dkms chroot build
+
+---
+ Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index aa57f85..4c5e0b4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -996,7 +996,11 @@ ifeq ($(CONFIG_PLATFORM_I386_PC), y)
+ EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+ EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+ CROSS_COMPILE ?=
++ifeq ($(kernelver),)
+ KVER  := $(shell uname -r)
++else
++KVER  := $(kernelver)
++endif
+ KSRC := /lib/modules/$(KVER)/build
+ MODDESTDIR := /lib/modules/$(KVER)/kernel/drivers/net/wireless/
+ INSTALL_PREFIX :=
+-- 
+2.34.1
+
