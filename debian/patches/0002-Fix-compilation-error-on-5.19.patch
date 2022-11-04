@@ -1,0 +1,57 @@
+From ce40065dc401c68b54b567b0e7a79d1f61a6a2e8 Mon Sep 17 00:00:00 2001
+From: Alexandre Ghiti <alexandre.ghiti@canonical.com>
+Date: Mon, 17 Oct 2022 15:29:11 +0200
+Subject: [PATCH] rtl8723ds: Fix compilation errors on a 5.19 kernel
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fix the following errors that happen on a 5.19 kernel:
+
+error: initialization of ‘int (*)(struct wiphy *, struct net_device *, unsigned int)’
+       from incompatible pointer type ‘int (*)(struct wiphy *, struct net_device *)’
+       [-Werror=incompatible-pointer-types]
+ 6821 | .stop_ap = cfg80211_rtw_stop_ap,
+
+error: ‘struct wireless_dev’ has no member named ‘current_bss’
+ 7052 | if (wdev->current_bss) {
+
+Signed-off-by: Alexandre Ghiti <alexandre.ghiti@canonical.com>
+---
+ os_dep/linux/ioctl_cfg80211.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/os_dep/linux/ioctl_cfg80211.c b/os_dep/linux/ioctl_cfg80211.c
+index 86bb2a2..19476f6 100644
+--- a/os_dep/linux/ioctl_cfg80211.c
++++ b/os_dep/linux/ioctl_cfg80211.c
+@@ -4189,7 +4189,11 @@ static int cfg80211_rtw_change_beacon(struct wiphy *wiphy, struct net_device *nd
+ 	return ret;
+ }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 0))
++static int cfg80211_rtw_stop_ap(struct wiphy *wiphy, struct net_device *ndev, unsigned int link_id)
++#else
+ static int cfg80211_rtw_stop_ap(struct wiphy *wiphy, struct net_device *ndev)
++#endif
+ {
+ 	RTW_INFO(FUNC_NDEV_FMT"\n", FUNC_NDEV_ARG(ndev));
+ 	return 0;
+@@ -7048,7 +7052,13 @@ void rtw_wdev_unregister(struct wireless_dev *wdev)
+ 
+ 	rtw_cfg80211_indicate_scan_done(adapter, _TRUE);
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 19, 0))
++	if (wdev->connected) {
++		u8 locally_generated = 1;
++		RTW_INFO(FUNC_ADPT_FMT" clear connected by cfg80211_disconnected\n", FUNC_ADPT_ARG(adapter));
++		cfg80211_disconnected(adapter->pnetdev, 0, NULL, 0, locally_generated, GFP_ATOMIC);
++	}
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(5, 19, 0))
+ 	if (wdev->current_bss) {
+ 		u8 locally_generated = 1;
+ 		RTW_INFO(FUNC_ADPT_FMT" clear current_bss by cfg80211_disconnected\n", FUNC_ADPT_ARG(adapter));
+-- 
+2.34.1
+

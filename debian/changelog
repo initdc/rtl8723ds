@@ -1,3 +1,10 @@
+licheerv-rtl8723ds-dkms (1.0-0ubuntu2) lunar; urgency=medium
+
+  * Fix compilation errors on 5.19 kernels (LP: #1993274)
+    Change maintainer to Ubuntu Developers. 
+ 
+ -- Heinrich Schuchardt <heinrich.schuchardt@canonical.com>  Fri, 04 Nov 2022 10:04:23 +0100
+
 licheerv-rtl8723ds-dkms (1.0-0ubuntu1) kinetic; urgency=medium
 
   * Initial version (LP: #1989595)
