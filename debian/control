@@ -1,5 +1,5 @@
 Source: licheerv-rtl8723ds-dkms
-Maintainer: Alexandre Ghiti <alexandre.ghiti@canonical.com>
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Section: utils
 Priority: optional
 Standards-Version: 4.5.1
