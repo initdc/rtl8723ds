@@ -1,0 +1,2 @@
+  * Fix compilation errors on 5.19 kernels (LP: #1993274)
+    Change maintainer to Ubuntu Developers. 
