@@ -1,0 +1,32 @@
+Description: Fix -Wdate-time and drop -Wno-date-time override. LP: #1996753
+ Otherwise dkms ftbfs with compiler from this century, as bc runtime
+ dependency is not declared. Upstream kernel prohibits using date-time
+ macros.
+Author: Dimitri John Ledkov <dimitri.ledkov@canonical.com>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1996753
+
+
+--- licheerv-rtl8723ds-dkms-1.0.orig/Makefile
++++ licheerv-rtl8723ds-dkms-1.0/Makefile
+@@ -15,11 +15,6 @@ EXTRA_CFLAGS += -Wno-unused-function
+ EXTRA_CFLAGS += -Wno-unused
+ #EXTRA_CFLAGS += -Wno-uninitialized
+ 
+-GCC_VER_49 := $(shell echo `$(CC) -dumpversion | cut -f1-2 -d.` \>= 4.9 | bc )
+-ifeq ($(GCC_VER_49),1)
+-EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
+-endif
+-
+ EXTRA_CFLAGS += -I$(src)/include
+ EXTRA_CFLAGS += -I$(src)/hal/phydm
+ 
+--- licheerv-rtl8723ds-dkms-1.0.orig/core/rtw_debug.c
++++ licheerv-rtl8723ds-dkms-1.0/core/rtw_debug.c
+@@ -47,7 +47,6 @@ static const char *rtw_log_level_str[] =
+ void dump_drv_version(void *sel)
+ {
+ 	RTW_PRINT_SEL(sel, "%s %s\n", DRV_NAME, DRIVERVERSION);
+-	RTW_PRINT_SEL(sel, "build time: %s %s\n", __DATE__, __TIME__);
+ }
+ 
+ void dump_drv_cfg(void *sel)

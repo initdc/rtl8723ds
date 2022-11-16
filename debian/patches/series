@@ -1,2 +1,3 @@
 0001-Fix-dkms-chroot-build.patch
 0002-Fix-compilation-error-on-5.19.patch
+Wdate-time.patch
